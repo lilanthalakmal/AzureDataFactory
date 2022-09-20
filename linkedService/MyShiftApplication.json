@@ -1,0 +1,12 @@
+{
+	"name": "MyShiftApplication",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=mowasalat-myshift-db-server.database.windows.net;initial catalog=mowasalat-myshifts-db-v2;user id=powerbi",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDlFRjE5NjM4LTc3NUMtNDlGOS1BMkRCLTM3MkI2QjNEQTVFQl8xYjgzM2Q4Yy1hNjY3LTQ0Y2UtODc5Mi04ODkyYmNiODYzNDciDQp9"
+		}
+	}
+}
