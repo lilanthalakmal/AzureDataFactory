@@ -1,0 +1,61 @@
+{
+	"name": "SqlServerTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MyShiftApplication",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "UPN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ShiftDemandId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CreatedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Published",
+				"type": "bit"
+			},
+			{
+				"name": "NotificationActivityId",
+				"type": "nchar"
+			},
+			{
+				"name": "Acknowledged",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "UserShift"
+		}
+	}
+}

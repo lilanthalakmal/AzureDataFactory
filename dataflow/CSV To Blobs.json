@@ -1,0 +1,49 @@
+{
+	"name": "CSV To Blobs",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					},
+					"name": "SQLServerDataset"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "AzureBlogStorage"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          UPN as string,",
+				"          ShiftDemandId as string,",
+				"          CreatedOn as timestamp,",
+				"          ModifiedOn as timestamp,",
+				"          CreatedBy as string,",
+				"          ModifiedBy as string,",
+				"          Id as string,",
+				"          Published as boolean,",
+				"          NotificationActivityId as string,",
+				"          Acknowledged as boolean",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SQLServerDataset",
+				"SQLServerDataset sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> AzureBlogStorage"
+			]
+		}
+	}
+}
