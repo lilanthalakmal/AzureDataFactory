@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "CSV To Blobs",
+				"name": "MSSQL To Blobs",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {

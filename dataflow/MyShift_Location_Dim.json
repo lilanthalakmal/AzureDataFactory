@@ -1,5 +1,5 @@
 {
-	"name": "CSV To Blobs",
+	"name": "MyShift_Location_Dim",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -9,18 +9,10 @@
 						"referenceName": "SqlServerTable1",
 						"type": "DatasetReference"
 					},
-					"name": "SQLServerDataset"
+					"name": "MyShift"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "DelimitedText1",
-						"type": "DatasetReference"
-					},
-					"name": "AzureBlogStorage"
-				}
-			],
+			"sinks": [],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
@@ -35,15 +27,10 @@
 				"          NotificationActivityId as string,",
 				"          Acknowledged as boolean",
 				"     ),",
-				"     allowSchemaDrift: false,",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> SQLServerDataset",
-				"SQLServerDataset sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     truncate: true,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> AzureBlogStorage"
+				"     format: 'table') ~> MyShift"
 			]
 		}
 	}
