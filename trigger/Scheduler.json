@@ -1,0 +1,25 @@
+{
+	"name": "Scheduler",
+	"properties": {
+		"description": "Test Scheduler",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "CSV To Blobs Pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2022-09-22T12:06:00",
+				"timeZone": "Arab Standard Time"
+			}
+		}
+	}
+}
