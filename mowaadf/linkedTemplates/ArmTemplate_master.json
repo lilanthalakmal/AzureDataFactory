@@ -7,13 +7,13 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "mowaadf"
 		},
-		"MyShiftApplication_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'MyShiftApplication'"
-		},
 		"AzureBlobStorage_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage'"
+		},
+		"MyShiftApplication_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MyShiftApplication'"
 		},
 		"containerUri": {
 			"type": "string",
@@ -42,11 +42,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"MyShiftApplication_connectionString": {
-						"value": "[parameters('MyShiftApplication_connectionString')]"
-					},
 					"AzureBlobStorage_connectionString": {
 						"value": "[parameters('AzureBlobStorage_connectionString')]"
+					},
+					"MyShiftApplication_connectionString": {
+						"value": "[parameters('MyShiftApplication_connectionString')]"
 					}
 				}
 			},

@@ -5,10 +5,10 @@
 		"factoryName": {
 			"value": "mowaadf"
 		},
-		"MyShiftApplication_connectionString": {
+		"AzureBlobStorage_connectionString": {
 			"value": ""
 		},
-		"AzureBlobStorage_connectionString": {
+		"MyShiftApplication_connectionString": {
 			"value": ""
 		},
 		"containerUri": {

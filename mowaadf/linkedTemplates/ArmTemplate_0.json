@@ -7,19 +7,32 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "mowaadf"
 		},
-		"MyShiftApplication_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'MyShiftApplication'"
-		},
 		"AzureBlobStorage_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage'"
+		},
+		"MyShiftApplication_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MyShiftApplication'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/MyShiftApplication')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -34,17 +47,32 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "DelimitedText",
 				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorage_connectionString')]"
-				}
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ShiftDefination",
+						"folderPath": "MyShift",
+						"container": "newcontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
@@ -105,39 +133,11 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "UserShift"
+					"table": "Location"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/MyShiftApplication')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "ShiftDefination",
-						"folderPath": "MyShift",
-						"container": "newcontainer"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
 			]
 		},
 		{
@@ -185,8 +185,64 @@
 						"     format: 'table') ~> SQLServerDataset",
 						"SQLServerDataset sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     truncate: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> AzureBlogStorage"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MyShift_Location_Dim')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference"
+							},
+							"name": "MyShiftLocation"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "LocationDimText"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          UPN as string,",
+						"          ShiftDemandId as string,",
+						"          CreatedOn as timestamp,",
+						"          ModifiedOn as timestamp,",
+						"          CreatedBy as string,",
+						"          ModifiedBy as string,",
+						"          Id as string,",
+						"          Published as boolean,",
+						"          NotificationActivityId as string,",
+						"          Acknowledged as boolean",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> MyShiftLocation",
+						"MyShiftLocation sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> LocationDimText"
 					]
 				}
 			},
@@ -202,7 +258,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "CSV To Blobs",
+						"name": "MSSQL To Blobs",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -230,6 +286,43 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "MyShift_Location_Dim",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "MSSQL To Blobs",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MyShift_Location_Dim",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"MyShiftLocation": {},
+									"LocationDimText": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"policy": {
@@ -239,7 +332,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CSV To Blobs')]"
+				"[concat(variables('factoryId'), '/dataflows/CSV To Blobs')]",
+				"[concat(variables('factoryId'), '/dataflows/MyShift_Location_Dim')]"
 			]
 		}
 	]
