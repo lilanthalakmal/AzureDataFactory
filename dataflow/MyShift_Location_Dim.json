@@ -38,7 +38,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: '',",
+				"     query: 'SELECT * FROM Location',",
 				"     format: 'query') ~> MyShiftLocation",
 				"MyShiftLocation sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
