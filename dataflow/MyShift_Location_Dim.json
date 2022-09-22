@@ -9,7 +9,7 @@
 						"referenceName": "SqlServerTable1",
 						"type": "DatasetReference"
 					},
-					"name": "MyShift"
+					"name": "MyShiftLocation"
 				}
 			],
 			"sinks": [],
@@ -30,7 +30,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> MyShift"
+				"     query: '',",
+				"     format: 'query') ~> MyShiftLocation"
 			]
 		}
 	}
