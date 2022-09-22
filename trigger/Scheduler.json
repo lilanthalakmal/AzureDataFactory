@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "Test Scheduler",
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
