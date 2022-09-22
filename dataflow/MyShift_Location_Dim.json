@@ -12,7 +12,15 @@
 					"name": "MyShiftLocation"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "LocationDimText"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
@@ -31,7 +39,11 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     query: '',",
-				"     format: 'query') ~> MyShiftLocation"
+				"     format: 'query') ~> MyShiftLocation",
+				"MyShiftLocation sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LocationDimText"
 			]
 		}
 	}
