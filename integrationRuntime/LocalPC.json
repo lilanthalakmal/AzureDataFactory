@@ -1,7 +1,0 @@
-{
-	"name": "LocalPC",
-	"properties": {
-		"type": "SelfHosted",
-		"description": "My  Local PC Runtime Environment"
-	}
-}
